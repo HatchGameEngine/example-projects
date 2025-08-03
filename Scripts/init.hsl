@@ -1,0 +1,6 @@
+const screenSize = 512;
+
+Window.SetSize(screenSize, screenSize);
+View.SetSize(0, screenSize, screenSize);
+
+Scene.Load("main.tmx");

@@ -1,0 +1,71 @@
+local var image = Resources.LoadImage("baboon.png", SCOPE_GAME);
+local var tintAmount = 0.5;
+local var usingSoftwareRenderer = false;
+
+class TintExample {
+    event Update() {
+        if (Input.IsKeyPressed(Key_S)) {
+            usingSoftwareRenderer = !usingSoftwareRenderer;
+
+            print("Using software renderer: " + (usingSoftwareRenderer ? "Yes" : "No"));
+
+            View.SetUseSoftwareRenderer(0, usingSoftwareRenderer);
+        }
+
+        const amt = 0.0125;
+
+        var press = Input.IsKeyDown(Key_RIGHT) - Input.IsKeyDown(Key_LEFT);
+        if (press < 0) {
+            tintAmount = Math.Max(tintAmount - amt, 0.0);
+        }
+        else if (press > 0) {
+            tintAmount = Math.Min(tintAmount + amt, 1.0);
+        }
+    }
+
+    event DrawBackground() {
+        Draw.SetBlendColor(0.75, 0.75, 0.75, 1.0);
+        Draw.Rectangle(0, 0, 800, 600);
+
+        Draw.SetBlendColor(0.50, 0.50, 0.50, 1.0);
+
+        repeat (8, y) {
+            repeat (4, x) {
+                Draw.Rectangle(x * 128 + ((y & 1) * 64), y * 64, 64, 64);
+            }
+        }
+
+        Draw.SetBlendColor(1.0, 1.0, 1.0, 1.0);
+    }
+
+    event DrawImageRow(y) {
+        Draw.SetTintColor(1.0, 0.0, 0.0, tintAmount);
+        Draw.ImageSized(image, 0, y, 128, 128);
+
+        Draw.SetTintColor(0.0, 1.0, 0.0, tintAmount);
+        Draw.ImageSized(image, 192, y, 128, 128);
+
+        Draw.SetTintColor(0.5, 0.0, 1.0, tintAmount);
+        Draw.ImageSized(image, 384, y, 128, 128);
+    }
+
+    event Render() {
+        this.DrawBackground();
+
+        Draw.UseTinting(true);
+
+        Draw.SetTintMode(TintMode_SRC_NORMAL);
+        this.DrawImageRow(0);
+
+        Draw.SetTintMode(TintMode_SRC_BLEND);
+        this.DrawImageRow(128);
+
+        Draw.SetTintMode(TintMode_DST_NORMAL);
+        this.DrawImageRow(256);
+
+        Draw.SetTintMode(TintMode_DST_BLEND);
+        this.DrawImageRow(384);
+
+        Draw.UseTinting(false);
+    }
+}

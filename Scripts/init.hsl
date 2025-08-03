@@ -1,0 +1,24 @@
+var baboonImageName = "baboon.png";
+
+Palette.EnablePaletteUsage(true);
+Palette.UsePaletteIndexLines(true);
+Palette.LoadFromResource(0, baboonImageName);
+Palette.CopyColors(0, 0, 1, 0, 256);
+
+repeat (256, i) {
+    var color = Palette.GetColor(1, i);
+
+    var r = (color & 0xFF0000) >> 16;
+    var g = (color & 0x00FF00) >> 8;
+    var b = color & 0xFF;
+
+    r = 0xFF - r;
+    g = 0xFF - g;
+    b = 0xFF - b;
+
+    color = (r << 16) | (g << 8) | b;
+
+    Palette.SetColor(1, i, color);
+}
+
+Scene.Load("baboon.tmx");

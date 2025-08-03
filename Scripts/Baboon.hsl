@@ -1,0 +1,59 @@
+local var baboonImage = Resources.LoadImage(baboonImageName, SCOPE_GAME);
+
+local var viewHeight = View.GetHeight(0);
+local var viewHeightHalf = Number.AsInteger(viewHeight * 0.5);
+local var viewHeightThird = Number.AsInteger(viewHeight / 3);
+
+local var usingSoftwareRenderer = false;
+
+class Baboon {
+    event Create() {
+        this.Width = this.PropertyGet("Width");
+        this.Height = this.PropertyGet("Height");
+
+        this.X = (View.GetWidth(0) * 0.5) - (this.Width * 0.5);
+        this.Y = viewHeightHalf - (this.Height * 0.5);
+
+        this.ID = this.GetIDWithinClass();
+
+        if (this.ID == 1) {
+            this.CenterX = this.X;
+            this.CenterY = this.Y;
+        }
+    }
+
+    event Update() {
+        if (this.ID == 0) {
+            if (Input.IsKeyPressed(Key_S)) {
+                usingSoftwareRenderer = !usingSoftwareRenderer;
+
+                print("Using software renderer: " + (usingSoftwareRenderer ? "Yes" : "No"));
+
+                View.SetUseSoftwareRenderer(0, usingSoftwareRenderer);
+            }
+        }
+        else if (this.ID == 1) {
+            var i = Scene_Frame / 32.0;
+            var distance = 64.0;
+
+            this.X = this.CenterX + (Math.Cos(i) * distance);
+            this.Y = this.CenterY + (Math.Sin(i) * distance);
+        }
+    }
+
+    event Render() {
+        switch (this.ID) {
+        case 1:
+            Palette.SetPaletteIndexLines(1, 0, viewHeightThird);
+            Palette.SetPaletteIndexLines(0, viewHeightThird, viewHeightThird * 2);
+            Palette.SetPaletteIndexLines(1, viewHeightThird * 2, viewHeightThird * 3);
+            break;
+        default:
+            Palette.SetPaletteIndexLines(0, 0, viewHeightHalf);
+            Palette.SetPaletteIndexLines(1, viewHeightHalf, viewHeight);
+            break;
+        }
+
+        Draw.ImageSized(baboonImage, this.X, this.Y, this.Width, this.Height);
+    }
+}

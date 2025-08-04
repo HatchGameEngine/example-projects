@@ -1,0 +1,150 @@
+local var image = Resources.LoadImage("pepper.png", SCOPE_GAME);
+local var usingSoftwareRenderer;
+
+local var viewWidth = View.GetWidth(0);
+local var viewHeight = View.GetHeight(0);
+
+local var centerX = viewWidth * 0.5;
+local var centerY = viewHeight * 0.5;
+
+local var circleX;
+local var circleY;
+
+local var useStencil = true;
+local var dotMask = 0;
+
+class StencilExample {
+    event Create() {
+        this.Persistent = true;
+    }
+
+    event OnSceneLoad() {
+        usingSoftwareRenderer = false;
+
+        circleX = [ centerX, 256 ];
+        circleY = [ centerY, 32 ];
+
+        View.SetUseSoftwareRenderer(0, usingSoftwareRenderer);
+    }
+
+    event OnSceneRestart() {
+        this.OnSceneLoad();
+    }
+
+    event Update() {
+        if (Input.IsKeyPressed(Key_S)) {
+            usingSoftwareRenderer = !usingSoftwareRenderer;
+
+            print("Using software renderer: " + (usingSoftwareRenderer ? "Yes" : "No"));
+
+            View.SetUseSoftwareRenderer(0, usingSoftwareRenderer);
+        }
+
+        if (Input.IsKeyPressed(Key_Z)) {
+            useStencil = !useStencil;
+
+            print("Stencil: " + (useStencil ? "Yes" : "No"));
+        }
+
+        if (Input.IsKeyPressed(Key_X)) {
+            dotMask++;
+
+            if (dotMask > 4) {
+                dotMask = 0;
+            }
+        }
+
+        var circleIdx = null;
+        if (Input.IsMouseButtonDown(0)) {
+            circleIdx = 0;
+        }
+        else if (Input.IsMouseButtonDown(2)) {
+            circleIdx = 1;
+        }
+
+        if (circleIdx != null) {
+            circleX[circleIdx] = Input.GetMouseX();
+            circleY[circleIdx] = Input.GetMouseY();
+        }
+    }
+
+    event DrawBackground() {
+        Draw.SetBlendColor(0.75, 0.75, 0.75, 1.0);
+        Draw.Rectangle(0, 0, viewWidth, viewHeight);
+
+        Draw.SetBlendColor(0.50, 0.50, 0.50, 1.0);
+
+        repeat (8, y) {
+            repeat (8, x) {
+                Draw.Rectangle(x * 128 + ((y & 1) * 64), y * 64, 64, 64);
+            }
+        }
+
+        Draw.SetBlendColor(1.0, 1.0, 1.0, 1.0);
+    }
+
+    event Render() {
+        Draw.Clear();
+
+        this.DrawBackground();
+
+        if (useStencil) {
+            Draw.UseStencil(true);
+            Draw.ClearStencil();
+            Draw.SetStencilTestFunction(StencilTest_Never);
+            Draw.SetStencilFailOperation(StencilOp_Replace);
+            Draw.SetStencilValue(1);
+        }
+
+        if (dotMask) {
+            Draw.SetDotMask(true);
+            Draw.SetHorizontalDotMaskOffset(0);
+            Draw.SetVerticalDotMaskOffset(0);
+
+            switch (dotMask) {
+            case 0:
+                Draw.SetHorizontalDotMask(1);
+                Draw.SetVerticalDotMask(1);
+                break;
+            case 1:
+                Draw.SetHorizontalDotMask(2);
+                Draw.SetVerticalDotMask(2);
+                break;
+            case 2:
+                Draw.SetHorizontalDotMask(4);
+                Draw.SetVerticalDotMask(4);
+                break;
+            case 3:
+                Draw.SetHorizontalDotMask(16);
+                Draw.SetVerticalDotMask(16);
+                break;
+            case 4:
+                Draw.SetHorizontalDotMask(16);
+                Draw.SetVerticalDotMask(16);
+                Draw.SetHorizontalDotMaskOffset(Scene_Frame);
+                Draw.SetVerticalDotMaskOffset(Scene_Frame);
+                break;
+            }
+        }
+
+        Draw.SetBlendColor(1.0, 0.0, 0.0, 1.0);
+        Draw.Circle(circleX[0], circleY[0], 128.0);
+
+        Draw.SetBlendColor(0.0, 0.0, 1.0, 1.0);
+        Draw.Circle(circleX[1], circleY[1], 64.0);
+
+        if (dotMask) {
+            Draw.SetDotMask(false);
+        }
+
+        Draw.SetStencilTestFunction(StencilTest_NotEqual);
+        Draw.SetStencilFailOperation(StencilOp_Keep);
+
+        var imageSize = 384;
+        Draw.ImageSized(image, centerX - (imageSize * 0.5), centerY - (imageSize * 0.5), imageSize, imageSize);
+
+        if (useStencil) {
+            Draw.UseStencil(false);
+        }
+    }
+}

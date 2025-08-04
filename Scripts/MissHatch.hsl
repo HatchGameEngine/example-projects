@@ -1,0 +1,9 @@
+class MissHatch {
+	event Create() {
+		this.Sprite = Resources.LoadSprite("miss_hatch.bin", SCOPE_GAME);
+	}
+
+	event Render() {
+		Draw.Sprite(this.Sprite, this.CurrentAnimation, this.CurrentFrame, this.X, this.Y, false, false, 2.0, 2.0);
+	}
+}

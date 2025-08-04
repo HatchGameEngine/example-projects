@@ -1,0 +1,56 @@
+var mouseModes = [
+    "default",
+    "relative",
+    "constrained"
+];
+
+class MouseModeTest {
+    event Create() {
+        var vw = View.GetWidth(0);
+        var vh = View.GetHeight(0);
+
+        this.MissHatch = Instance.Create("MissHatch", vw * 0.5, vh * 0.5);
+
+        this.Font = new Font();
+        this.Font.SetPixelsPerUnit(50);
+    }
+
+    event DrawBackground() {
+        var vw = View.GetWidth(0);
+        var vh = View.GetHeight(0);
+
+        Draw.SetBlendColor(0.5, 0.5, 0.5, 1.0);
+        Draw.Rectangle(0, 0, vw, vh);
+        Draw.SetBlendColor(1.0, 1.0, 1.0, 1.0);
+    }
+
+    event Update() {
+        var mouseX = Input.GetMouseX() * View.GetWidth(0) / Window.GetWidth();
+        var mouseY = Input.GetMouseY() * View.GetHeight(0) / Window.GetHeight();
+
+        this.MissHatch.X = mouseX;
+        this.MissHatch.Y = mouseY;
+
+        if (Input.IsMouseButtonPressed(0)) {
+            switch (Input.GetMouseMode()) {
+            case MOUSEMODE_DEFAULT:
+                Input.SetMouseMode(MOUSEMODE_RELATIVE);
+                break;
+            case MOUSEMODE_RELATIVE:
+                Input.SetMouseMode(MOUSEMODE_CONSTRAINED);
+                break;
+            case MOUSEMODE_CONSTRAINED:
+                Input.SetMouseMode(MOUSEMODE_DEFAULT);
+                break;
+            }
+        }
+    }
+
+    event Render() {
+        this.DrawBackground();
+
+        var currentMouseMode = Input.GetMouseMode();
+
+        Draw.Text(this.Font, "Mouse mode: " + mouseModes[currentMouseMode], 10, 10);
+    }
+}

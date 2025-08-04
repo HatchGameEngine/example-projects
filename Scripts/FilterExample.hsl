@@ -1,0 +1,56 @@
+local var image = Resources.LoadImage("pepper.png", SCOPE_GAME);
+local var usingSoftwareRenderer = false;
+
+class FilterExample {
+    event Update() {
+        if (Input.IsKeyPressed(Key_S)) {
+            usingSoftwareRenderer = !usingSoftwareRenderer;
+
+            print("Using software renderer: " + (usingSoftwareRenderer ? "Yes" : "No"));
+
+            View.SetUseSoftwareRenderer(0, usingSoftwareRenderer);
+        }
+    }
+
+    event DrawImageRow(x, y) {
+        Draw.SetTextureBlend(true);
+
+        Draw.SetBlendColor(1.0, 0.0, 0.0, 1.0);
+        Draw.ImageSized(image, x, y + 272, 64, 64);
+
+        Draw.SetBlendColor(0.0, 1.0, 0.0, 1.0);
+        Draw.ImageSized(image, x + 80, y + 272, 64, 64);
+
+        Draw.SetBlendColor(0.0, 0.0, 1.0, 1.0);
+        Draw.ImageSized(image, x + 160, y + 272, 64, 64);
+
+        Draw.SetBlendColor(1.0, 1.0, 1.0, 1.0);
+    }
+
+    event Render() {
+        Draw.Clear();
+        Draw.SetTextureBlend(false);
+        Draw.SetBlendColor(1.0, 1.0, 1.0, 1.0);
+
+        var x = 24;
+        var y = 80;
+
+        Draw.ImageSized(image, x, y, 256, 256);
+
+        this.DrawImageRow(x + 16, y);
+
+        x += 272;
+        Draw.SetFilter(Filter_BLACK_AND_WHITE);
+        Draw.ImageSized(image, x, y, 256, 256);
+
+        this.DrawImageRow(x + 16, y);
+
+        x += 272;
+        Draw.SetFilter(Filter_INVERT);
+        Draw.ImageSized(image, x, y, 256, 256);
+
+        this.DrawImageRow(x + 16, y);
+
+        Draw.SetFilter(Filter_NONE);
+    }
+}

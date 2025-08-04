@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="27" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="2">
+ <layer id="1" name="Tile Layer 1" width="27" height="15">
+  <data encoding="base64" compression="zlib">
+   eAFjYBgFoyEwGgKjITAaAqMhQJ0QAAAGVAAB
+  </data>
+ </layer>
+ <objectgroup id="2" name="Object Layer 1">
+  <object id="1" name="FilterExample" x="0" y="0">
+   <point/>
+  </object>
+ </objectgroup>
+</map>

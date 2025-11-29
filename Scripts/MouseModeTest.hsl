@@ -1,7 +1,6 @@
 var mouseModes = [
     "default",
-    "relative",
-    "constrained"
+    "relative"
 ];
 
 class MouseModeTest {
@@ -37,9 +36,6 @@ class MouseModeTest {
                 Input.SetMouseMode(MOUSEMODE_RELATIVE);
                 break;
             case MOUSEMODE_RELATIVE:
-                Input.SetMouseMode(MOUSEMODE_CONSTRAINED);
-                break;
-            case MOUSEMODE_CONSTRAINED:
                 Input.SetMouseMode(MOUSEMODE_DEFAULT);
                 break;
             }

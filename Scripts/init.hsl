@@ -1,1 +1,3 @@
+View.SetSize(0, 848, 480);
+
 Instance.Create("FilterExample", 0, 0);

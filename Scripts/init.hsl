@@ -1,6 +1,8 @@
 const screenSize = 512;
 
 Window.SetSize(screenSize, screenSize);
+Window.SetScale(1);
+
 View.SetSize(0, screenSize, screenSize);
 
 Instance.Create("TintExample", 0, 0);

@@ -21,4 +21,6 @@ repeat (256, i) {
     Palette.SetColor(1, i, color);
 }
 
+View.SetSize(0, 848, 480);
+
 Scene.Load("baboon.tmx");

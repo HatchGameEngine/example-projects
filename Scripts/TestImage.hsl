@@ -1,0 +1,11 @@
+class TestImage {
+    event Create(resource) {
+        this.Resource = resource;
+        this.Width = Image.GetWidth(resource) / 2;
+        this.Height = Image.GetHeight(resource) / 2;
+    }
+
+    event Render() {
+        Draw.ImageSized(this.Resource, this.X, this.Y, this.Width, this.Height);
+    }
+}

@@ -1,0 +1,8 @@
+var resource = Resources.LoadImage("miss_hatch_in_real_life.jpg", SCOPE_GAME);
+
+var image = Instance.Create("TestImage", 0.0, 0.0, resource);
+
+View.SetSize(0, image.Width, image.Height);
+
+Window.SetSize(image.Width, image.Height);
+Window.SetScale(1);
